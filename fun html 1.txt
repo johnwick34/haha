@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Question Page</title>
+	<style>
+		#question-box {
+			width: 400px;
+			height: 200px;
+			background-color: #f5f5f5;
+			padding: 20px;
+			position: relative;
+		}
+		
+		#no-button {
+			position: absolute;
+			top: 50%;
+			right: 0;
+			transform: translate(0, -50%);
+		}
+	</style>
+</head>
+<body>
+	<div id="question-box">
+		<h2>Are you  gay?</h2>
+		<button>Yes</button>
+		<button id="no-button">No</button>
+	</div>
+	
+	<script>
+		var noButton = document.getElementById("no-button");
+		var maxDistance = 30;
+		var dangerDistance = 50;
+		var dangerX, dangerY;
+		var dangerTimer;
+		
+		function moveButton() {
+			var box = document.getElementById("question-box");
+			var maxWidth = box.offsetWidth - noButton.offsetWidth;
+			var maxHeight = box.offsetHeight - noButton.offsetHeight;
+			var newX = Math.floor(Math.random() * maxDistance * 2) - maxDistance;
+			var newY = Math.floor(Math.random() * maxDistance * 2) - maxDistance;
+			newX = Math.min(Math.max(newX, -maxDistance), maxDistance);
+			newY = Math.min(Math.max(newY, -maxDistance), maxDistance);
+			noButton.style.left = (noButton.offsetLeft + newX) + "px";
+			noButton.style.top = (noButton.offsetTop + newY) + "px";
+			dangerX = Math.floor(Math.random() * (maxWidth - dangerDistance * 2)) + dangerDistance;
+			dangerY = Math.floor(Math.random() * (maxHeight - dangerDistance * 2)) + dangerDistance;
+			if (noButton.offsetLeft > dangerX - maxDistance && noButton.offsetLeft < dangerX + dangerDistance && noButton.offsetTop > dangerY - maxDistance && noButton.offsetTop < dangerY + dangerDistance) {
+				moveButton();
+			} else {
+				dangerTimer = setTimeout(moveToDanger, 1000);
+			}
+		}
+		
+		function moveToDanger() {
+			noButton.style.left = dangerX + "px";
+			noButton.style.top = dangerY + "px";
+			dangerTimer = setTimeout(moveButton, 2000);
+		}
+		
+		noButton.addEventListener("mouseover", function() {
+			clearTimeout(dangerTimer);
+			moveToDanger();
+		});
+		
+		noButton.addEventListener("mouseout", function() {
+			dangerTimer = setTimeout(moveButton, 1000);
+		});
+		
+		moveButton();
+	</script>
+</body>
+</html>
